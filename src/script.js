@@ -2,6 +2,9 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
+import boilerVertexShader from './shaders/vertex.glsl'
+import boilerFragmentShader from './shaders/fragment.glsl'
+
 /**
  * Base
  */
@@ -10,6 +13,7 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+scene.background = new THREE.Color(0x132020)
 
 /**
  * Sizes
@@ -39,9 +43,9 @@ window.addEventListener('resize', () =>
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.x = 1
-camera.position.y = 1
-camera.position.z = 1
+camera.position.x = 3
+camera.position.y = 1.5
+camera.position.z = 2.5
 scene.add(camera)
 
 // Controls
@@ -49,13 +53,27 @@ const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 
 /**
- * Cube
+ * Sphere
  */
-const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: 0xff0000 })
-)
-scene.add(cube)
+
+const geometry = new THREE.BoxBufferGeometry(1,1,1)
+
+let shaderMaterial = null
+
+shaderMaterial= new THREE.ShaderMaterial({
+    vertexShader:boilerVertexShader,
+    fragmentShader:boilerFragmentShader,
+    wireframe:true,
+    uniforms:{
+        uTime:{value:0}
+    }
+
+
+})
+
+const Sphere = new THREE.Mesh(geometry,shaderMaterial)
+
+scene.add(Sphere)
 
 /**
  * Renderer
@@ -73,7 +91,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 const clock = new THREE.Clock()
 let lastElapsedTime = 0
 
-const tick = () =>
+const animateScene = () =>
 {
     const elapsedTime = clock.getElapsedTime()
     const deltaTime = elapsedTime - lastElapsedTime
@@ -82,11 +100,14 @@ const tick = () =>
     // Update controls
     controls.update()
 
+    //Update shader with time
+    shaderMaterial.uniforms.uTime.value = elapsedTime
+
     // Render
     renderer.render(scene, camera)
 
-    // Call tick again on the next frame
-    window.requestAnimationFrame(tick)
+    // Call animateScene again on the next frame
+    window.requestAnimationFrame(animateScene)
 }
 
-tick()
+animateScene()
