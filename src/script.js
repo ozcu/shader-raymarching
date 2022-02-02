@@ -69,7 +69,8 @@ shaderMaterial= new THREE.ShaderMaterial({
     vertexShader:boilerVertexShader,
     fragmentShader:boilerFragmentShader,
     uniforms:{
-        uTime:{value:0}
+        uTime:{value:0},
+        uResolution:{value: new THREE.Vector4()},
     }
 
 
@@ -88,6 +89,23 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+const imageAspect = 1
+let a1,a2
+
+if(sizes.height/sizes.width > imageAspect){
+    a1= (sizes.width/sizes.height) * imageAspect
+    a2=1
+
+}else{
+    a1= 1
+    a2 = (sizes.height/sizes.width) * imageAspect
+}
+
+shaderMaterial.uniforms.uResolution.value.x = sizes.width
+shaderMaterial.uniforms.uResolution.value.y = sizes.height
+shaderMaterial.uniforms.uResolution.value.z = a1
+shaderMaterial.uniforms.uResolution.value.w = a2
 
 /**
  * Animate
