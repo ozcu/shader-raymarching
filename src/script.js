@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import boilerVertexShader from './shaders/vertex.glsl'
 import boilerFragmentShader from './shaders/fragment.glsl'
 
+
 /**
  * Base
  */
@@ -56,6 +57,14 @@ scene.add(camera)
 //const controls = new OrbitControls(camera, canvas)
 //controls.enableDamping = true
 
+
+//Matcap
+const textureLoader = new THREE.TextureLoader()
+const solarTexture = textureLoader.load('../static/solar.png')
+const glowTexture = textureLoader.load('../statics/glow.png')
+console.log(solarTexture)
+console.log(glowTexture)
+
 /**
  * Sphere
  */
@@ -71,6 +80,7 @@ shaderMaterial= new THREE.ShaderMaterial({
     uniforms:{
         uTime:{value:0},
         uResolution:{value: new THREE.Vector4()},
+        uMatcap:{value: solarTexture},
     }
 
 
