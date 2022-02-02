@@ -1,6 +1,6 @@
 import './style.css'
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+//import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import boilerVertexShader from './shaders/vertex.glsl'
 import boilerFragmentShader from './shaders/fragment.glsl'
@@ -42,28 +42,32 @@ window.addEventListener('resize', () =>
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.x = 3
-camera.position.y = 1.5
+
+let frustumSize = sizes.height
+let aspect = sizes.width/sizes.height
+const camera = new THREE.OrthographicCamera(frustumSize * aspect / -2,frustumSize * aspect / 2, frustumSize / 2, frustumSize/-2, 0.1,10 )
+
+//const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+
 camera.position.z = 2.5
 scene.add(camera)
 
 // Controls
-const controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
+//const controls = new OrbitControls(camera, canvas)
+//controls.enableDamping = true
 
 /**
  * Sphere
  */
 
-const geometry = new THREE.BoxBufferGeometry(1,1,1)
+//const geometry = new THREE.BoxBufferGeometry(1,1,1)
 
+const plane = new THREE.PlaneBufferGeometry(sizes.width,sizes.height,1,1)
 let shaderMaterial = null
 
 shaderMaterial= new THREE.ShaderMaterial({
     vertexShader:boilerVertexShader,
     fragmentShader:boilerFragmentShader,
-    wireframe:true,
     uniforms:{
         uTime:{value:0}
     }
@@ -71,9 +75,9 @@ shaderMaterial= new THREE.ShaderMaterial({
 
 })
 
-const Sphere = new THREE.Mesh(geometry,shaderMaterial)
+const planeObj = new THREE.Mesh(plane,shaderMaterial)
 
-scene.add(Sphere)
+scene.add(planeObj)
 
 /**
  * Renderer
@@ -98,7 +102,7 @@ const animateScene = () =>
     lastElapsedTime = elapsedTime
 
     // Update controls
-    controls.update()
+    //controls.update()
 
     //Update shader with time
     shaderMaterial.uniforms.uTime.value = elapsedTime
