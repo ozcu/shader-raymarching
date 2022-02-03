@@ -1,6 +1,8 @@
 uniform float uTime;
 uniform vec4 uResolution;
-uniform sampler2D uMatcap;
+uniform vec2 uMouse;
+uniform sampler2D uMatcap1;
+uniform sampler2D uMatcap2;
 varying vec2 vUv;
 varying vec3 vPosition;
 float PI = 3.141592653589793238;
@@ -55,9 +57,9 @@ float sdBox( vec3 p, vec3 b )
 float sdf(vec3 p){
     
     vec3 p1 = rotate(p,vec3(1.0),uTime/2.0); //rotate obj
-    float sphere = sdSphere(p,0.3);
-    float box = sdBox(p1,vec3(0.2));
-    return smin(box,sphere,0.1);
+    float sphere = sdSphere(p,0.2);
+    float box = sdBox(p1,vec3(0.15));
+    return smin(box,sphere,0.09);
 
 }
 
@@ -96,7 +98,7 @@ void main(){
         float diff = dot(vec3(1.0),normal);
         vec2 matcapUV = matcap(ray,normal);
         color = vec3(diff);
-       // color = texture2D(uMatcap,matcapUV).rgb;
+        color = texture2D(uMatcap1,matcapUV).rgb;
     }
 
     gl_FragColor = vec4(color, 1.0);
