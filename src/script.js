@@ -59,11 +59,23 @@ scene.add(camera)
 
 
 //Matcap
-const textureLoader = new THREE.TextureLoader()
-const solarTexture = textureLoader.load('../static/solar.png')
-const glowTexture = textureLoader.load('../statics/glow.png')
-console.log(solarTexture)
-console.log(glowTexture)
+
+// instantiate a loader
+const loader = new THREE.TextureLoader();
+const solarTexture = loader.load('solar.png')
+const glowTexture = loader.load('glow.png')
+console.log(solarTexture,glowTexture)
+
+//Mouse
+let mouse = new THREE.Vector2()
+
+
+window.addEventListener('mousemove', (event) =>
+    {
+    mouse.x = event.clientX - sizes.width / 2 
+    mouse.y = sizes.height / 2 - event.clientY 
+
+    }) 
 
 /**
  * Sphere
@@ -80,7 +92,9 @@ shaderMaterial= new THREE.ShaderMaterial({
     uniforms:{
         uTime:{value:0},
         uResolution:{value: new THREE.Vector4()},
-        uMatcap:{value: solarTexture},
+        uMouse:{value: new THREE.Vector2(0,0)},
+        uMatcap1:{value: solarTexture},
+        uMatcap2:{value: glowTexture},
     }
 
 
