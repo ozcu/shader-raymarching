@@ -57,9 +57,9 @@ float sdBox( vec3 p, vec3 b )
 float sdf(vec3 p){
     
     vec3 p1 = rotate(p,vec3(1.0),uTime/2.0); //rotate obj
-    float sphere = sdSphere(p,0.2);
-    float box = sdBox(p1,vec3(0.15));
-    return smin(box,sphere,0.09);
+    float sphere = sdSphere(p - vec3(uMouse * uResolution.zw,0.0),0.2);
+    float box = smin(sdBox(p1,vec3(0.15)),sdSphere(p,0.15),0.15);
+    return smin(box,sphere,0.2);
 
 }
 
@@ -98,7 +98,7 @@ void main(){
         float diff = dot(vec3(1.0),normal);
         vec2 matcapUV = matcap(ray,normal);
         color = vec3(diff);
-        color = texture2D(uMatcap1,matcapUV).rgb;
+        color = texture2D(uMatcap2,matcapUV).rgb;
     }
 
     gl_FragColor = vec4(color, 1.0);

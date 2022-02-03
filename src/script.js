@@ -72,8 +72,8 @@ let mouse = new THREE.Vector2()
 
 window.addEventListener('mousemove', (event) =>
     {
-    mouse.x = event.clientX - sizes.width / 2 
-    mouse.y = sizes.height / 2 - event.clientY 
+        mouse.x = event.clientX / sizes.width * 2 - 1
+        mouse.y = - (event.clientY / sizes.height) * 2 + 1  
 
     }) 
 
@@ -148,6 +148,12 @@ const animateScene = () =>
 
     //Update shader with time
     shaderMaterial.uniforms.uTime.value = elapsedTime
+
+    if(mouse){
+        shaderMaterial.uniforms.uMouse.value = mouse
+    }
+    
+
 
     // Render
     renderer.render(scene, camera)
